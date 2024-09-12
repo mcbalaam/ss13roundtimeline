@@ -7,8 +7,12 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "express": "^4.21.0",
+    "fs": "0.0.1-security",
+    "js-yaml": "^4.1.0",
     "vue": "^3.2.13",
-    "vue-router": "^4.0.3"
+    "vue-router": "^4.0.3",
+    "yaml": "^2.5.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-router": "~5.0.0",
