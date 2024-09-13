@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Timeline msg="Welcome to Your Vue.js App"/>
+    <Timeline/>
   </div>
 </template>
 
@@ -9,7 +9,7 @@
 import Timeline from '@/components/Timeline.vue';
 
 export default {
-  name: 'HomeView',
+  name: 'RoundView',
   components: {
     Timeline
   }

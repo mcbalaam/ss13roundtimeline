@@ -68,13 +68,20 @@
 </template>
 
 <script>
-const yaml = require('js-yaml');
-const fs = require('fs');
+import yaml from 'js-yaml';
 
 const round_id = 1
 
+const round_logs = async () => {
+  const response = await fetch(`../../../rounds/${round_id}.yml`);
+  const data = await response.text();
+  const parsedData = yaml.load(data);
+  return parsedData;
+};
 
-
+round_logs().then((parsedData) => {
+  console.log(parsedData);
+});
 
 export default {
     name: 'Timeline',
@@ -146,7 +153,6 @@ ol {
 
 .timeline-helper {
     border-left: 5px solid rgb(251, 255, 241);
-    ;
     width: 10px;
     height: 100%;
     /* Set height to 100% */
