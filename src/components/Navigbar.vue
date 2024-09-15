@@ -1,9 +1,9 @@
 <template>
     <div class="navbar">
-        <div class="icon">
+        <div class="icon" @click="navigateTo($event, 'main')">
             <img src="../assets/logo.png"
         </div>
-        <div class="button">Раунды</div>
+        <div class="button" @click="navigateTo($event, 'rounds')">Раунды</div>
         <div class="button">Вики</div>
         <div class="button">Космогалерея</div>
         <div class="button">GitHub</div>
@@ -13,8 +13,14 @@
 
 <script>
     export default {
-    name: 'Navigbar'
+    name: 'Navigbar',
+    methods: {
+        navigateTo(event, path) {
+            this.$router.push({ name: path });
+        }
+    }
     } 
+    
 </script>
 
 <style scoped>

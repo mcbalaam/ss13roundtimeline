@@ -1,0 +1,70 @@
+maps:
+  mt: "Meta Station"
+  ib: "IceBox Station"
+  bx: "NSS Journey"
+  dt: "Delta Station"
+  pb: "Pubby Station"
+  ks: "Kilo Station"
+gamerules:
+  sec: "Secret"
+events:
+  '@st': [
+    title: "Раунд {number} начинается на {station_name}!",
+    desc: "Очков угрозы: {threat_points}"
+  ] 
+  '@end': [
+    title: "Раунд {number} закончился",
+    desc: "Информацию о раунде можно увидеть на {greentext_hplink}"
+  ]
+  '@dth': [
+    title: "{char} умирает в {location}",
+    desc: "Локация: {location} \nКоординаты: {coordinates} \n Состояние здоровья: {brute}, {burn}, {tox}"
+  ]
+  '@ann': [
+    title: "Оповещение {role} - {char}",
+    desc: "{message}"
+  ]
+  '@aia': [
+    title: "Оповещение ИИ: {char}",
+    desc: "{message}"
+  ]
+  '@cen': [
+    title: "Приоритетное оповещение от ЦК",
+    desc: "{message}"
+  ]
+  '@grn': [
+    title: "Уровень угрозы {change_verb} до Зелёный",
+    desc: "{char} устанавливает уровень угрозы Зелёный в {location}, {coordinates}"
+  ]
+  '@orn': [
+    title: "Уровень угрозы {change_verb} до Оранжевый",
+    desc: "Уровень угрозы Оранжевый установлен {orange_cause}"
+  ]
+  '@vio': [
+    title: "Уровень угрозы {change_verb} до Фиолетовый",
+    desc: "{char} устанавливает уровень угрозы Фиолетовый в {location}, {coordinates}"
+  ]
+  '@amb': [
+    title: "Введён уровень угрозы Янтарный!",
+    desc: "{char} устанавливает уровень угрозы Янтарный в {location}, {coordinates}"
+  ]
+  '@red': [
+    title: "ВНИМАНИЕ! КОД - КРАСНЫЙ!",
+    desc: "{char} устанавливает уровень угрозы Красный в {location}, {coordinates}"
+  ]
+  '@del': [
+    title: "ТРЕВОГА! КОД - ДЕЛЬТА!",
+    desc: "Уровень угрозы Дельта установлен автоматически из-за угрозы уничтожения станции"
+  ]
+  '@fxs': [
+    title: "{char} отправляет факс на {fax_destination}",
+    desc: "{char} отправляет документ из {fax_origin} на {fax_destination}\n Содержание документа: \n{message}"
+  ]
+  '@fxr': [
+    title: "На {fax_destination} прислан факс от {fax_origin}",
+    desc: "На {fax_destination} прислан документ от {fax_origin}. \nСодержание документа: \n{message} "
+  ]
+  '@ant': [
+    title: "Режим игры выдаёт мидраундного антагониста {antag_type} {char}",
+    desc: "{char} становится мидраундным антагонистом {antag_type} \n Цели антагониста: \n{obj_list}"
+  ]

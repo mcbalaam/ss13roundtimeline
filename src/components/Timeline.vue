@@ -72,16 +72,16 @@ import yaml from 'js-yaml';
 
 const round_id = 1
 
-const round_logs = async () => {
-  const response = await fetch(`../../../rounds/${round_id}.yml`);
-  const data = await response.text();
-  const parsedData = yaml.load(data);
-  return parsedData;
-};
+// const round_logs = async () => {
+//   const response = await fetch(`../../../rounds/${round_id}.yml`);
+//   const data = await response.text();
+//   const parsedData = yaml.load(data);
+//   return parsedData;
+// };
 
-round_logs().then((parsedData) => {
-  console.log(parsedData);
-});
+// round_logs().then((parsedData) => {
+//   console.log(parsedData);
+// });
 
 export default {
     name: 'Timeline',
@@ -163,6 +163,7 @@ ol {
 }
 
 .container-box {
+    margin-top: 200px;
     font-family: fm;
     position: absolute;
     width: 1500px;
