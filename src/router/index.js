@@ -20,7 +20,7 @@ const routes = [
     path: `/rounds/:roundNumber`,
     name: 'roundid',
     component: RoundView,
-    meta: { title: (route) => `Раунд #${route.params.roundNumber} - Ark Station 13` }
+    meta: { title: (route) => `Раунд #${route.params.roundNumber} - Ark Station 13`}
   }
 ]
 

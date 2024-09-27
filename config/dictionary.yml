@@ -8,63 +8,48 @@ maps:
 gamerules:
   sec: "Secret"
 events:
-  '@st': [
-    title: "Раунд {number} начинается на {station_name}!",
-    desc: "Очков угрозы: {threat_points}"
-  ] 
-  '@end': [
-    title: "Раунд {number} закончился",
-    desc: "Информацию о раунде можно увидеть на {greentext_hplink}"
-  ]
-  '@dth': [
-    title: "{char} умирает в {location}",
-    desc: "Локация: {location} \nКоординаты: {coordinates} \n Состояние здоровья: {brute}, {burn}, {tox}"
-  ]
-  '@ann': [
-    title: "Оповещение {role} - {char}",
-    desc: "{message}"
-  ]
-  '@aia': [
-    title: "Оповещение ИИ: {char}",
-    desc: "{message}"
-  ]
-  '@cen': [
-    title: "Приоритетное оповещение от ЦК",
-    desc: "{message}"
-  ]
-  '@grn': [
-    title: "Уровень угрозы {change_verb} до Зелёный",
-    desc: "{char} устанавливает уровень угрозы Зелёный в {location}, {coordinates}"
-  ]
-  '@orn': [
-    title: "Уровень угрозы {change_verb} до Оранжевый",
+  'st': 
+    title: "Раунд #{id} начинается на {map}!"
+    desc: "Очков угрозы: {thr_p}"
+  'end': 
+    title: "Раунд {id} закончился"
+    desc: "Информацию о раунде можно увидеть на {gt}"
+  'dth': 
+    title: "{char} умирает в {loc}"
+    desc: "Локация: {loc} \nКоординаты: {coord}"
+  'ann': 
+    title: "Оповещение {char_n} - {role}"
+    desc: "{msg}"
+  'aia': 
+    title: "Оповещение ИИ: {char}"
+    desc: "{msg}"
+  'cen': 
+    title: "Приоритетное оповещение от ЦК"
+    desc: "{msg}"
+  'grn': 
+    title: "Уровень угрозы {change_verb} до Зелёный"
+    desc: "{char} устанавливает уровень угрозы Зелёный в {loc}, {coord}"
+  'orn': 
+    title: "Уровень угрозы {change_verb} до Оранжевый"
     desc: "Уровень угрозы Оранжевый установлен {orange_cause}"
-  ]
-  '@vio': [
-    title: "Уровень угрозы {change_verb} до Фиолетовый",
-    desc: "{char} устанавливает уровень угрозы Фиолетовый в {location}, {coordinates}"
-  ]
-  '@amb': [
-    title: "Введён уровень угрозы Янтарный!",
-    desc: "{char} устанавливает уровень угрозы Янтарный в {location}, {coordinates}"
-  ]
-  '@red': [
-    title: "ВНИМАНИЕ! КОД - КРАСНЫЙ!",
-    desc: "{char} устанавливает уровень угрозы Красный в {location}, {coordinates}"
-  ]
-  '@del': [
-    title: "ТРЕВОГА! КОД - ДЕЛЬТА!",
+  'vio': 
+    title: "Уровень угрозы {change_verb} до Фиолетовый"
+    desc: "{char} устанавливает уровень угрозы Фиолетовый в {loc}, {coord}"
+  'amb': 
+    title: "Введён уровень угрозы Янтарный!"
+    desc: "{char} устанавливает уровень угрозы Янтарный в {loc}, {coord}"
+  'red': 
+    title: "ВНИМАНИЕ! КОД - КРАСНЫЙ!"
+    desc: "{char} устанавливает уровень угрозы Красный в {loc}, {coord}"
+  'del': 
+    title: "ТРЕВОГА! КОД - ДЕЛЬТА!"
     desc: "Уровень угрозы Дельта установлен автоматически из-за угрозы уничтожения станции"
-  ]
-  '@fxs': [
-    title: "{char} отправляет факс на {fax_destination}",
-    desc: "{char} отправляет документ из {fax_origin} на {fax_destination}\n Содержание документа: \n{message}"
-  ]
-  '@fxr': [
-    title: "На {fax_destination} прислан факс от {fax_origin}",
-    desc: "На {fax_destination} прислан документ от {fax_origin}. \nСодержание документа: \n{message} "
-  ]
-  '@ant': [
-    title: "Режим игры выдаёт мидраундного антагониста {antag_type} {char}",
-    desc: "{char} становится мидраундным антагонистом {antag_type} \n Цели антагониста: \n{obj_list}"
-  ]
+  'fxs': 
+    title: "{char} отправляет факс на {fax_dst}"
+    desc: "{char} отправляет документ из {fax_org} на {fax_dst}\n Содержание документа: \n{msg}"
+  'fxr': 
+    title: "На {fax_dst} прислан факс от {fax_org}"
+    desc: "На {fax_dst} прислан документ от {fax_org}. \nСодержание документа: \n{msg} "
+  'ant': 
+    title: "Режим игры выдаёт мидраундного антагониста {ntg_type} {char}"
+    desc: "{char} становится мидраундным антагонистом {ntg_type} \n Цели антагониста: \n{obj_list}"

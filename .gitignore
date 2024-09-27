@@ -1,8 +1,8 @@
 .DS_Store
 node_modules
 rounds
-/dist
-
+dist
+tests
 
 # local env files
 .env.local
