@@ -1,0 +1,33 @@
+id: "2"
+gr: "sec"
+map: "bx"
+"st": 1726379823
+"end": 1726393731
+events:
+  -
+    e_type: "st"
+    data:
+      ts: "1726379409"
+      thr_p: "75"
+  -
+    e_type: "dth"
+    data:
+      ts: "1726379409"
+      char: "Alexander Nordost (Trainee Engineer)"
+      loc: "Space"
+      coord: "142-96-2"
+  -
+    e_type: "ann"
+    data:
+      ts: "1726379409"
+      char_n: "Лирак Кнокен"
+      role: "Captain"
+      loc: "North Bridge"
+      msg: "Проверка связи."
+  -
+    e_type: "red"
+    data:
+      ts: "1726379409"
+      char: "Лирак Кнокен (Captain)"
+      loc: "North Bridge"
+      coord: "142-96-2"

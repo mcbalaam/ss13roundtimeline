@@ -15,55 +15,6 @@
             <div class="pointer"></div>
             <div class="sign">Alexander Gremlin (Security Officer) dies at Space at x:233, y:72, z:2</div>
         </div>
-        <div class="item announce" v-if="showAdditionalInfo.announce || showSummary.announce">
-            <div class="timestamp">12.09@12:15:57</div>
-            <div class="pointer" @click="toggleAdditionalInfo($event, 'announce')">{{ showAdditionalInfo.announce ? '-'
-                : '+' }}</div>
-            <div class="sign">Station AI Announcement: Iris Bright Sophie</div>
-            <div class="additional-info" v-if="showAdditionalInfo.announce">
-                <p>Ирис Брайт Софи приветствует экипаж НС Северное Сияние Сто Тридцать Восемь!</p>
-                <p>На эту смену я буду вашим коллегой и ассистентом. Не бойтесь обращаться ко мне за любой помощью -
-                    Ирис всегда рад помочь.</p>
-                <p>Директива смены - установка блюспейс-артиллерии. Ирис проконтроллирует процесс.</p>
-                <p>Хорошего дня!</p>
-                <p>разъём часовня куст бычок</p>
-            </div>
-        </div>
-        <div class="item antag" v-if="showAdditionalInfo.antag || showSummary.antag">
-            <div class="timestamp">12.09@12:19:28</div>
-            <div class="pointer" @click="toggleAdditionalInfo($event, 'antag')">{{ showAdditionalInfo.antag ? '-' : '+'
-                }}</div>
-            <div class="sign">Mid-round antagonist "Traitor" rolled to Lunary (Roboticist)</div>
-            <div class="additional-info" v-if="showAdditionalInfo.antag">
-                <p>Threat points spent: 10</p>
-                <p>Antagonist objectives:</p>
-                <ol>
-                    <li>Украсть <u>chief engineer zippo</u></li>
-                    <li>Убить <u>Layla Honey (Bridge Secretary)</u></li>
-                    <li>Сбежать на ЦК незамеченным</li>
-                </ol>
-            </div>
-        </div>
-        <div class="item antag" v-if="showAdditionalInfo.antag || showSummary.antag">
-            <div class="timestamp">12.09@12:19:28</div>
-            <div class="pointer" @click="toggleAdditionalInfo($event, 'antag')">{{ showAdditionalInfo.antag ? '-' : '+'
-                }}</div>
-            <div class="sign">Mid-round antagonist "Traitor" rolled to Lunary (Roboticist)</div>
-            <div class="additional-info" v-if="showAdditionalInfo.antag">
-                <p>Threat points spent: 10</p>
-                <p>Antagonist objectives:</p>
-                <ol>
-                    <li>Украсть <u>chief engineer zippo</u></li>
-                    <li>Убить <u>Layla Honey (Bridge Secretary)</u></li>
-                    <li>Сбежать на ЦК незамеченным</li>
-                </ol>
-            </div>
-        </div>
-        <div class="item command" v-if="showSummary.command">
-            <div class="timestamp">12.09@12:22:31</div>
-            <div class="pointer">+</div>
-            <div class="sign">Layla Honey (Bridge Secretary) sends a document to Central Command Fax</div>
-        </div>
     </div>
 </template>
 

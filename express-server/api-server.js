@@ -1,8 +1,36 @@
 const express = require("express");
 const app = express();
-const fs = require("fs");
 const yaml = require("js-yaml");
 const msgpack = require("msgpack");
+
+const fs = require('fs');
+const util = require('util');
+
+const readdirPromise = util.promisify(fs.readdir);
+const readFilePromise = util.promisify(fs.readFile);
+
+async function getRoundsData() {
+  const dirPath = "../rounds";
+  const roundsData = [];
+
+  const files = await readdirPromise(dirPath);
+  const filePromises = files.map((file) => {
+    const filePath = `${dirPath}/${file}`;
+    return readFilePromise(filePath).then((buffer) => {
+      const data = msgpack.unpack(buffer, { recursiveUnpack: true });
+      const roundId = data.id;
+      const mapName = dict.maps[data.map];
+      const startTime = unixTimeToDateTime(data.st);
+      const endTime = unixTimeToDateTime(data.end);
+      const roundData = `${mapName}, ${startTime} - ${endTime}`;
+      return { roundId, roundData };
+    });
+  });
+
+  const results = await Promise.all(filePromises);
+  roundsData.push(...results);
+  return roundsData;
+}
 
 let dict;
 fs.readFile("../config/dictionary.yml", "utf8", (err, data) => {
@@ -134,25 +162,14 @@ app.get("/api/rounds/:roundId", async (req, res) => {
   }
 });
 
-app.get("/api/rounds", (req, res) => {
-  const dirPath = "../rounds";
-  let buffer = null;
-  let data = null;
-  rounds_data = [];
-
-  // for(each in dirPath) {
-  //     buffer = fs.readFileSync('example.msgpack');
-  //     data = msgpack.decode(buffer);
-  // }
-
-  fs.readdir(dirPath, (err, files) => {
-    if (err) {
-      res.status(500).send({ message: "Error reading directory" });
-    } else {
-      sleep(2000);
-      res.json(files);
-    }
-  });
+app.get("/api/rounds", async (req, res) => {
+  try {
+    const roundsData = await getRoundsData();
+    res.json(roundsData);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: "Error reading rounds data" });
+  }
 });
 
 app.listen(8000, () => {

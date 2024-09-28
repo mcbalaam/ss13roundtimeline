@@ -2,17 +2,18 @@
     <div class="container-box">
         <div class="list-title">
             <p class="round-title">Раундов в библиотеке: <b>{{ round_amount }}</b></p><button class="refresh-list"
-                @click="refresh">Обновить</button>
+                @click="refresh"><img class="reload" src="../assets/reload.svg">Обновить</button>
         </div>
         <div class="list-container">
-            <div class="progressbar" v-if="loading">
-                <div class="progressbar" v-if="loading">
+            <div class="progressbar" v-if="loading" @beforeLeave="beforeLeave">
+                <div class="pgbdwn">
                     <div class="progress" :style="{ width: progress + '%' }"></div>
                 </div>
             </div>
-            <div class="list-item" v-for="(file, index) in files" :key="index">
-                <p class="round-title">Раунд #{{ fileNameWithoutExtension(file) }}</p>
-                <p class="round-desc">IceBox Station, <u>15.09.24</u> @ 17:32:11 - 20:13:29</p>
+            <div class="list-item" v-for="(file, index) in files" :key="index"
+                @click="navigateTo($event, file.roundId)">
+                <p class="round-title">Раунд #{{ file.roundId }}</p>
+                <p class="round-desc">{{ file.roundData }}</p>
                 <div class="copy"><img src="../assets/copy.svg"></div>
             </div>
             <div class="end-line"></div>
@@ -45,10 +46,19 @@ export default {
             });
     },
     methods: {
+        beforeLeave(el) {
+            el.classList.add('disappear');
+        },
         fileNameWithoutExtension(fileName) {
             return fileName.split('.').slice(0, -1).join('');
         },
+        navigateTo(event, path) {
+            this.$router.push({ name: 'roundid', params: { roundNumber: path } });
+        },
         refresh() {
+            if (this.loading) {
+                return
+            }
             this.files = []
             this.current = 0;
             this.progress = 5;
@@ -69,7 +79,11 @@ export default {
 
             const interval = setInterval(() => {
                 if (current < total) {
-                    this.files.push(files[current]);
+                    const file = files[current];
+                    this.files.push({
+                        roundId: file.roundId,
+                        roundData: file.roundData
+                    });
                     this.progress = (current / total) * 100;
                     current++;
                 } else {
@@ -78,9 +92,9 @@ export default {
                     clearInterval(interval);
                     setTimeout(() => {
                         this.loading = false;
-                    }, 200);
+                    }, 50);
                 }
-            }, 100);
+            }, 50);
         }
     }
 }
@@ -93,8 +107,19 @@ export default {
     height: 10px;
     background-image: repeating-linear-gradient(-45deg, rgb(23, 44, 44), rgb(23, 44, 44) 25px, rgb(172, 172, 172) 25px, rgb(172, 172, 172) 50px);
     animation: progress 1s linear infinite;
-    background-size: 170% 100%;
+    background-size: 150% 100%;
     transition: 0.2s;
+}
+
+.pgbdwn {
+    background-color: rgb(23, 44, 44);
+    height: 10px;
+    padding: 5px;
+}
+
+.reload {
+    height: 20px;
+    margin-top: 1px;
 }
 
 .progressbar {
@@ -103,6 +128,37 @@ export default {
     display: flex;
     flex-direction: column;
     height: fit-content;
+    animation-name: appear;
+    animation-duration: 0.3s;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+@keyframes disappear {
+    from {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+.disappear {
+    animation-name: disappear;
+    animation-duration: 0.3s;
 }
 
 .progressbar p {
@@ -115,7 +171,7 @@ export default {
 
 @keyframes progress {
     from {
-        background-position: -70px 0;
+        background-position: -88px 0;
     }
 
     to {
@@ -152,17 +208,33 @@ export default {
     display: inline-block;
     transition: 0.3s;
     cursor: pointer;
+    animation-duration: 0.3s;
+    animation-name: fadein;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+        scale: 0.9;
+    }
+
+    to {
+        opacity: 1;
+        scale: 1;
+    }
 }
 
 .list-item:hover {
     background-color: rgb(59, 83, 76);
     transform: translateY(-2px);
+    scale: 1.01;
 }
 
 .refresh-list:hover {
     background-color: rgb(59, 83, 76);
     color: aliceblue;
     transform: translateY(-2px);
+    scale: 1.05;
 }
 
 .list-item:hover>.copy {
@@ -217,6 +289,7 @@ export default {
     display: flex;
     flex-direction: column;
     row-gap: 10px;
+    transition: height 0.5s ease-out;
 }
 
 .refresh-list {
@@ -227,10 +300,14 @@ export default {
     font-size: 15px;
     height: 30px;
     margin-top: 5px;
-    width: 100px;
+    width: 120px;
     margin-left: auto;
     transition: 0.3s;
     cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding-top: 4px;
 }
 
 .list-title {
@@ -253,7 +330,7 @@ export default {
     padding-top: 20px;
     padding-right: 20px;
     padding-bottom: 15px;
-    transition: 0.2s ease-out;
-    height: fit-content;
+    overflow-y: auto;
+    transition: 0.5s ease-out;
 }
 </style>
