@@ -3,8 +3,8 @@ const app = express();
 const yaml = require("js-yaml");
 const msgpack = require("msgpack");
 
-const fs = require('fs');
-const util = require('util');
+const fs = require("fs");
+const util = require("util");
 
 const readdirPromise = util.promisify(fs.readdir);
 const readFilePromise = util.promisify(fs.readFile);
@@ -61,6 +61,18 @@ function unixTimeToDateTime(timestamp) {
   return `${day}.${month}.${year} @ ${hours}:${minutes}:${seconds}`;
 }
 
+function unixTimeToTime(timestamp) {
+  const date = new Date(timestamp * 1000);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear().toString().slice(-2);
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const seconds = date.getSeconds().toString().padStart(2, "0");
+
+  return `${day}.${month} @ ${hours}:${minutes}:${seconds}`;
+}
+
 async function decodeByDictionary(data) {
   const decoded_logs = [];
   const events = data.events;
@@ -70,6 +82,7 @@ async function decodeByDictionary(data) {
   for (const event of events) {
     const eventType = event.e_type;
     const eventData = event.data;
+    const eventTime = event.data.ts;
     const template = dict.events[eventType];
 
     if (!template) {
@@ -83,8 +96,10 @@ async function decodeByDictionary(data) {
     let desc = template.desc
       ? replacePlaceholders(template.desc, data, eventData, round_id, map)
       : "";
+    let event_type = eventType;
+    let event_time = unixTimeToTime(eventTime);
 
-    decoded_logs.push({ title, desc });
+    decoded_logs.push({ title, desc, event: event_type, time: event_time });
   }
 
   return decoded_logs;

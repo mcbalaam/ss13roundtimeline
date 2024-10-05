@@ -1,226 +1,520 @@
 <template>
-    <div class="container-box">
-        <div class="timeline-helper"></div>
-        <div class="item roundstart" v-if="showAdditionalInfo.roundstart || showSummary.roundstart">
-            <div class="timestamp">12.09@12:02:15</div>
-            <div class="pointer" @click="toggleAdditionalInfo($event, 'roundstart')">{{ showAdditionalInfo.roundstart ?
-                '-' : '+' }}</div>
-            <div class="sign">Round <u>#3998</u> Dynamic (Team-Based) is starting on the <u>IceBox Station</u>!</div>
-            <div class="additional-info" v-if="showAdditionalInfo.roundstart">
-                <p>Threat points to spend: 75</p>
-            </div>
-        </div>
-        <div class="item death" v-if="showSummary.death">
-            <div class="timestamp">12.09@12:08:28</div>
-            <div class="pointer"></div>
-            <div class="sign">Alexander Gremlin (Security Officer) dies at Space at x:233, y:72, z:2</div>
-        </div>
-    </div>
+	<div class="wrapper">
+		<div class="roundtitle">
+			<div class="titleload">
+				<div class="title"><img class="gamemode" src="../assets/star.svg"><b>Раунд #1</b><button
+						class="b-copy"><img class="copy" src="../assets/copy.svg"></button>
+				</div>
+				<div class="progressbar" v-show="loading">
+					<div class="pgbdwn">
+						<div class="progress" :style="{ width: progress + '%' }"></div>
+					</div>
+				</div>
+			</div>
+
+
+			<p class="sub">IceBox Station, 2:15:23</p>
+			<!-- <p class="sub">15.09.24 @ 12:50:09 - 15.09.24 @ 16:50:09</p> -->
+		</div>
+		<div class="container-box">
+			<div class="timeline-start"></div>
+			<div class="timeline-helper"></div>
+			<div class="items-timeline">
+				<div v-for="(file, index) in files" :key="index" class="item" :class="file.event">
+					<div class="timestamp">{{ file.time }}</div>
+					<div class="pointer" v-if="file.desc != 'undefined'" @click="toggleAdditionalInfo(index)">{{
+						file.showAdditionalInfo ? '-' : '+' }}</div>
+					<div class="sign">{{ file.title }}</div>
+					<div v-if="file.showAdditionalInfo" class="additional-info" v-show="file.showAdditionalInfo">
+						<p v-html="file.desc"></p>
+					</div>
+				</div>
+			</div>
+			<div class="timeline-end">
+				<img class="arrow" src="../assets/arrow.png">
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
-import yaml from 'js-yaml';
-
+const axios = require('axios')
 const round_id = 1
 
-// const round_logs = async () => {
-//   const response = await fetch(`../../../rounds/${round_id}.yml`);
-//   const data = await response.text();
-//   const parsedData = yaml.load(data);
-//   return parsedData;
-// };
-
-// round_logs().then((parsedData) => {
-//   console.log(parsedData);
-// });
-
 export default {
-    name: 'Timeline',
-    props: {
-        msg: String
-    },
-    data() {
-        return {
-            showAdditionalInfo: {
-                roundstart: false,
-                announce: false,
-                antag: false
-            },
-            showSummary: {
-                roundstart: true,
-                death: true,
-                announce: true,
-                antag: true,
-                command: true
-            }
-        }
-    },
-    methods: {
-        toggleAdditionalInfo(event, type) {
-            this.showAdditionalInfo[type] = !this.showAdditionalInfo[type];
-        }
-    }
+	name: 'Timeline',
+	props: {
+		msg: String
+	},
+	data() {
+		return {
+			files: [],
+			round_amount: "fetching...",
+			loading: true,
+			progress: 5,
+		}
+	},
+	mounted() {
+		axios.get(`http://localhost:8000/api/rounds/${round_id}`)
+			.then(response => {
+				this.addFiles(response.data);
+			})
+			.catch(error => {
+				console.error(error);
+			});
+	},
+	methods: {
+		toggleAdditionalInfo(index) {
+			this.files[index].showAdditionalInfo = !this.files[index].showAdditionalInfo;
+		},
+		refresh() {
+			if (this.loading) {
+				return
+			}
+			this.files = []
+			this.current = 0;
+			this.progress = 5;
+			this.loading = true;
+			axios.get('http://localhost:8000/api/rounds')
+				.then(response => {
+					this.round_amount = response.data.length;
+					this.addFiles(response.data);
+				})
+				.catch(error => {
+					console.error(error);
+				});
+
+		},
+		addFiles(files) {
+			this.loading = true;
+			const total = files.length;
+			let current = 0;
+
+			const interval = setInterval(() => {
+				if (current < total) {
+					const file = files[current];
+					this.createItem(file);
+					this.progress = (current / total) * 100;
+					current++;
+				} else {
+					this.progress = (current / total) * 100;
+					current++;
+					clearInterval(interval);
+					setTimeout(() => {
+						this.loading = false;
+					}, 300);
+				}
+			}, 20);
+		},
+		createItem(file) {
+			const item = {
+				title: file.title,
+				desc: file.desc,
+				event: file.event,
+				time: file.time,
+				showAdditionalInfo: file.desc = false
+			};
+			this.files.push(item);
+		}
+	}
 }
 </script>
 
 <style scoped>
-@font-face {
-    font-family: fm;
-    src: url(../assets/FeatureMono-Medium.ttf);
+.titleload {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+}
+
+.title b {
+	min-width: 270px;
+}
+
+.wrapper {
+	width: 1000px;
+	height: fit-content;
+	min-height: 78.8vh;
+	padding-left: 10%;
+}
+
+.progress {
+	position: relative;
+	overflow: hidden;
+	height: 10px;
+	background-image: repeating-linear-gradient(-45deg, #4a4658, #4a4658 25px, rgb(172, 172, 172) 25px, rgb(172, 172, 172) 50px);
+	animation: progress 1s linear infinite;
+	background-size: 200% 100%;
+	transition: 0.2s;
+}
+
+.pgbdwn {
+	background-color: var(--accent-color);
+	height: 10px;
+	padding: 5px;
+}
+
+.progressbar {
+	background-color: #32303b;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	height: fit-content;
+	animation-name: appear;
+	animation-duration: 0.2s;
+	transition: opacity 0.2s;
+	margin-left: 10px;
+	width: 80%;
+	margin-top: 3px;
+}
+
+.progressbar.hide {
+	opacity: 0;
+}
+
+@keyframes appear {
+	0% {
+		transform: scaleY(0);
+		opacity: 0;
+	}
+
+	100% {
+		transform: scaleY(1);
+		opacity: 1;
+	}
+}
+
+@keyframes disappear {
+	from {
+		opacity: 1;
+		transform: translateY(0px);
+		scale: 0.9;
+	}
+
+	to {
+		opacity: 0;
+		transform: translateY(-10px);
+		scale: 1
+	}
+}
+
+.disappear {
+	animation-name: disappear;
+	animation-duration: 0.2s;
+}
+
+.progressbar p {
+	position: relative;
+	margin-top: 0px;
+	margin-bottom: 10px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+@keyframes progress {
+	from {
+		background-position: -71px 0;
+	}
+
+	to {
+		background-position: 0px 0px;
+	}
 }
 
 @font-face {
-    font-family: fmr;
-    src: url(../assets/FeatureMono-Regular.ttf);
+	font-family: fm;
+	src: url(../assets/FeatureMono-Medium.ttf);
 }
 
-ol {
-    margin-top: -5px;
+@font-face {
+	font-family: fmr;
+	src: url(../assets/FeatureMono-Regular.ttf);
 }
 
-.additional-info {
-    padding-left: 20px;
-    padding-right: 30px;
-    margin-top: 10px;
-    width: fit-content;
-    /* adjust width as needed */
-    text-align: start;
-    height: fit-content;
-    min-width: 600px;
-    max-width: 1000px;
-    grid-column: event;
-    transition: opacity 0.3s, max-height 0.3s;
-    /* add transition */
-    overflow: hidden;
-    /* add overflow hidden to prevent content from overflowing during animation */
+.timeline-end {
+	margin-left: 197px;
+	margin-top: 0px;
+	margin-bottom: 6px;
+	transition: 0.2s;
+	cursor: pointer;
 }
 
-.additional-info p {
-    position: relative;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    line-height: 1.2;
+.arrow {
+	height: 32px;
+	width: 32px;
+	transition: 0.2s;
+	cursor: pointer;
 }
 
-.timeline-helper {
-    border-left: 5px solid rgb(251, 255, 241);
-    width: 10px;
-    height: 100%;
-    /* Set height to 100% */
-    margin-left: 189px;
-    position: absolute;
-    flex: 1;
-    z-index: 1;
+.arrow:hover {
+	transform: scale(1.2);
 }
 
 .container-box {
-    margin-top: 200px;
-    font-family: fm;
-    position: absolute;
-    width: 1500px;
-    height: fit-content;
-    /* border-left: 5px solid black; */
-    margin-left: 200px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    color: rgb(233, 233, 233);
-    padding-left: 10px;
-    display: flex;
-    flex-direction: column;
-    transition: 0.3s;
+	font-family: fm;
+	color: rgb(233, 233, 233);
+
+	position: absolute;
+	width: 80%;
+	height: fit-content;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+
+	display: flex;
+	flex-direction: column;
+	transition: 0.3s;
+}
+
+.roundtitle {
+	font-family: fm;
+	color: rgb(233, 233, 233);
+	margin-top: 50px;
+	margin-left: 18px;
+	margin-bottom: -10px;
+	width: 80vw;
 }
 
 .item {
-    background-color: rgb(26, 54, 54);
-    display: grid;
-    grid-template-columns: [timestamp] 154px [pointer] 30px [event] 1000px [end];
-    grid-template-rows: [static] 10px [desc] fit-content [last];
-    gap: 15px;
-    row-gap: 5px;
+	display: grid;
+	grid-template-columns: [timestamp] 175px [pointer] 30px [event] auto [end];
+	grid-template-rows: [static] fit-content [end];
+	gap: 15px;
+	row-gap: 5px;
 
-    position: relative;
-    margin-bottom: 10px;
-    padding-top: 5px;
-    padding-bottom: 7px;
-    padding-left: 8px;
-    transition: 0.3s;
+	background-color: #1F1E23;
+	position: relative;
+	padding-top: 5px;
+	padding-bottom: 7px;
+	padding-left: 8px;
+	transition: 0.1s;
+	height: fit-content;
 }
 
 .item:hover {
-    background-color: rgb(35, 68, 68);
+	background-color: #32303b;
+}
+
+.b-copy {
+	height: 45px;
+	width: 45px;
+	margin-left: 20px;
+	border: none;
+	background-color: #1F1E23;
+	transition: 0.2s;
+	cursor: pointer;
+}
+
+.b-copy:hover {
+	background-color: #32303b;
+	color: aliceblue;
+	scale: 1.1;
+}
+
+.title {
+	font-size: 50px;
+	line-height: 50px;
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	width: 500px;
+}
+
+.sub {
+	font-size: 25px;
+	color: rgb(165, 165, 165);
+	margin-bottom: 30px;
+	margin-top: 10px;
+}
+
+.gamemode {
+	height: 46px;
+	margin-right: 20px;
+}
+
+.copy {
+	height: 26px;
+	margin-top: 2px;
+}
+
+ol {
+	margin-top: -5px;
+}
+
+.additional-info {
+	padding-left: 20px;
+	padding-right: 30px;
+	margin-top: 0px;
+	width: fit-content;
+	text-align: start;
+	min-width: 200px;
+	max-width: 1000px;
+	grid-column: event;
+	overflow: hidden;
+	/* opacity: 0; */
+	max-height: fit-content;
+	transition: max-height 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+.animate-additional-info {
+	animation: unfold-additional-info 0.2s forwards;
+}
+
+@keyframes unfold-additional-info {
+	0% {
+		transform: scaleY(0);
+		opacity: 0;
+	}
+
+	100% {
+		transform: scaleY(1);
+		opacity: 1;
+	}
+}
+
+.additional-info p {
+	position: relative;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	line-height: 1.2;
+}
+
+.timeline-helper {
+	border-left: 5px solid rgb(251, 255, 241);
+	width: 10px;
+	height: calc(100% - 60px);
+	margin-left: 210px;
+	position: absolute;
+	margin-top: 10px;
+	flex: 1;
+	z-index: 1;
+}
+
+.timeline-start {
+	height: 10px;
+	width: 10px;
+	border: 5px solid rgb(251, 255, 241);
+	margin-left: 202.5px;
+	margin-top: -10px;
+	margin-bottom: 6px;
+	background-color: #1F1E23;
+	transition: 0.2s;
+	cursor: pointer;
+}
+
+.timeline-start:hover {
+	transform: scale(1.2);
+}
+
+
+
+
+
+.item:hover {
+	background-color: #32303b;
 }
 
 .item:hover>.pointer {
-    border: rgb(35, 68, 68) solid 5px;
+	border: #32303b solid 5px;
 }
 
 .pointer:hover {
-    transform: scale(1.2);
+	transform: scale(1.2);
+}
+
+.pointer:active {
+	transform: scale(1)
 }
 
 .pointer {
-    transition: 0.3s;
-    background-color: rgb(244, 252, 224);
-    width: 20px;
-    height: 20px;
-    border: rgb(26, 54, 54) solid 5px;
-    z-index: 2;
-    cursor: pointer;
-    line-height: 20px;
-    grid-column: pointer;
-    margin-top: 0.2px;
+	transition: 0.1s;
+	background-color: rgb(244, 252, 224);
+	width: 20px;
+	height: 20px;
+	border: #1F1E23 solid 5px;
+	z-index: 2;
+	cursor: pointer;
+	line-height: 20px;
+	grid-column: pointer;
+	margin-top: 0.2px;
+	text-align: center;
+	user-select: none;
 }
 
 .sign {
-    background-color: rgb(103, 125, 106);
-    height: 25px;
-    width: fit-content;
-    padding-left: 20px;
-    padding-right: 20px;
-    margin-top: 2.5px;
-    grid-column: event;
+	background-color: rgb(103, 125, 106);
+	height: 25px;
+	width: fit-content;
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-top: 2.5px;
+	grid-column: event;
 }
 
 .timestamp {
-    background-color: rgb(103, 125, 106);
-    height: 25px;
-    width: fit-content;
-    padding-left: 10px;
-    padding-right: 10px;
-    margin-top: 2.5px;
-    grid-column: timestamp;
+	background-color: rgb(103, 125, 106);
+	height: 25px;
+	width: fit-content;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin-top: 2.5px;
+	grid-column: timestamp;
 }
 
-.roundstart .pointer,
-.roundstart .sign,
-.roundstart .timestamp,
-.roundstart .additional-info {
-    background-color: rgb(124, 148, 126);
+
+.st .sign,
+.st .pointer,
+.st .additional-info,
+.st .timestamp {
+	background-image: repeating-linear-gradient(-45deg, #46584a, #46584a 10px, rgb(113, 136, 108) 10px, rgb(113, 136, 108) 20px);
 }
 
-.announce .pointer,
-.announce .sign,
-.announce .timestamp,
-.announce .additional-info {
-    background-color: rgb(108, 113, 139);
+.ann .pointer,
+.ann .sign,
+.ann .timestamp,
+.ann .additional-info {
+	background: repeating-linear-gradient(-45deg, rgb(75, 79, 99), rgb(75, 79, 99) 10px, rgb(108, 113, 139) 10px, rgb(108, 113, 139) 20px);
 }
 
-.death .pointer,
-.death .sign,
-.death .timestamp {
-    background-color: rgb(146, 132, 148);
+.aia .pointer,
+.aia .sign,
+.aia .timestamp,
+.aia .additional-info {
+	background: repeating-linear-gradient(-45deg, rgb(100, 105, 131), rgb(100, 105, 131) 10px, rgb(133, 139, 168) 10px, rgb(133, 139, 168) 20px);
 }
 
-.antag .pointer,
-.antag .sign,
-.antag .timestamp,
-.antag .additional-info {
-    background-color: rgb(139, 98, 98);
+.dth .pointer,
+.dth .sign,
+.dth .timestamp,
+.dth .additional-info {
+	background-color: rgb(146, 132, 148);
 }
 
-.command .pointer,
-.command .sign,
-.command .timestamp {
-    background-color: rgb(139, 132, 99);
+.ant .pointer,
+.ant .sign,
+.ant .timestamp,
+.ant .additional-info {
+	background-color: rgb(139, 98, 98);
+}
+
+.nte .pointer,
+.nte .sign,
+.nte .timestamp,
+.nte .additional-info {
+	background-color: rgb(177, 154, 120);
+}
+
+.fxs .pointer,
+.fxs .sign,
+.fxs .timestamp,
+.fxs .additional-info {
+	background-color: rgb(173, 161, 98);
+}
+
+.red .sign,
+.red .pointer, 
+.red .additional-info,
+.red .timestamp {
+	background-image: repeating-linear-gradient(-45deg, rgb(148, 71, 71), rgb(148, 71, 71) 10px, rgb(216, 103, 103) 10px, rgb(216, 103, 103) 20px);
 }
 </style>
