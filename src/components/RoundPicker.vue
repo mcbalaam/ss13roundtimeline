@@ -106,6 +106,14 @@ export default {
 </script>
 
 <style scoped>
+
+@media (max-width: 1200px) {
+  .container-box {
+    margin-left: 0px !important;
+	width: calc(100vw - 75px)  !important;
+  }
+}
+
 :root {
 	--primary-color: #F6F8F6;
 	/* Light Gray */

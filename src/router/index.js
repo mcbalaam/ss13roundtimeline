@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import RoundView from '../views/RoundView.vue'
 import RoundPicker from '@/components/RoundPicker.vue'
 import MainPageView from '@/views/MainPageView.vue'
+import GalleryView from '@/views/GalleryView.vue'
 
 const routes = [
   {
@@ -21,6 +22,12 @@ const routes = [
     name: 'roundid',
     component: RoundView,
     meta: { title: (route) => `Раунд #${route.params.roundNumber} - Ark Station 13`}
+  },
+  {
+    path: `/gallery`,
+    name: 'gallery',
+    component: GalleryView,
+    meta: { title: (route) => `Космогалерея - Ark Station 13`}
   }
 ]
 

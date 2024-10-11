@@ -22,8 +22,10 @@
 			<div class="items-timeline">
 				<div v-for="(file, index) in files" :key="index" class="item" :class="file.event">
 					<div class="timestamp">{{ file.time }}</div>
-					<div class="pointer" v-if="file.desc != 'undefined'" @click="toggleAdditionalInfo(index)">{{
+					<div class="pointer">
+						<div class="expander" v-if="file.desc != ''" @click="toggleAdditionalInfo(index)">{{
 						file.showAdditionalInfo ? '-' : '+' }}</div>
+					</div>
 					<div class="sign">{{ file.title }}</div>
 					<div v-if="file.showAdditionalInfo" class="additional-info" v-show="file.showAdditionalInfo">
 						<p v-html="file.desc"></p>
@@ -104,7 +106,7 @@ export default {
 						this.loading = false;
 					}, 300);
 				}
-			}, 20);
+			}, 10);
 		},
 		createItem(file) {
 			const item = {
@@ -512,7 +514,7 @@ ol {
 }
 
 .red .sign,
-.red .pointer, 
+.red .pointer,
 .red .additional-info,
 .red .timestamp {
 	background-image: repeating-linear-gradient(-45deg, rgb(148, 71, 71), rgb(148, 71, 71) 10px, rgb(216, 103, 103) 10px, rgb(216, 103, 103) 20px);

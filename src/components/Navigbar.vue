@@ -6,8 +6,8 @@
 		<div class="button" @click="navigateTo($event, 'rounds')">Раунды</div>
 		<div class="button">Правила</div>
 		<div class="button">Вики</div>
-		<div class="button">Космогалерея</div>
-		<div class="button">GitHub</div>
+		<div class="button" @click="navigateTo($event, 'gallery')">Космогалерея</div>
+		<div class="button" @click="openLink('https://github.com/ArkStation13/Ark-Station-13')">GitHub</div>
 		<div class="button">Поддержать</div>
 	</div>
 </template>
@@ -18,6 +18,9 @@ export default {
 	methods: {
 		navigateTo(event, path) {
 			this.$router.push({ name: path });
+		},
+		openLink(link) {
+			window.open(link, '_blank');
 		}
 	}
 }

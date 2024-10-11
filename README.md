@@ -1,19 +1,17 @@
 # ss13roundtimeline
+## aka
+# Информационный сайт Ark Station 13 
 
-## Project setup
+Позволяет отрисовывать динамические таймлайны протекающих на сервере раундов, которые формируются из логов на стороне сервера.
+
+![alt text](/src/assets/image.png)
+
+## Подготовка проекта
 ```
 pnpm install
 ```
 
-### Compiles and hot-reloads for development
-```
-pnpm run serve
-```
-
-### Compiles and minifies for production
+### Компиляция и сборка
 ```
 pnpm run build
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

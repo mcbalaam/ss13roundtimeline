@@ -4,7 +4,7 @@
             <img src="../assets/logo.png">
         </div>
         <div class="about">
-            <p>Ark Station is a downstream of <a href="#">/tg/ Station</a> under the GNU Public Licence. All
+            <p>Ark Station is a downstream of <u @click="openLink('https://github.com/NovaSector/NovaSector')">Nova Sector</u> under the GNU Public Licence. All
                 rights
                 reserved.</p>
         </div>
@@ -22,7 +22,10 @@ export default {
     methods: {
         navigateTo(event, path) {
             this.$router.push({ name: path });
-        }
+        },
+		openLink(link) {
+			window.open(link, '_blank');
+		}
     }
 }
 
@@ -38,6 +41,15 @@ export default {
     margin-left: auto;
     text-align: end;
     margin-top: 5px;
+}
+
+u {
+    color: rgb(128, 160, 160);
+	cursor: pointer;
+}
+
+u:hover {
+    color: rgb(181, 214, 216);
 }
 
 .website p {

@@ -105,18 +105,6 @@ async function decodeByDictionary(data) {
   return decoded_logs;
 }
 
-function replaceMapAndRound(str, map, round_id, dict) {
-  const mapName = dict.maps[map];
-  console.log(mapName);
-  if (mapName) {
-    str = str.replace("{map}", mapName);
-  }
-
-  str = str.replace("{id}", round_id);
-
-  return str;
-}
-
 function replacePlaceholders(str, data, eventData, round_id, map) {
   return str.replace(/\{([^}]+)\}/g, (match, key) => {
     const keys = key.split(".");
