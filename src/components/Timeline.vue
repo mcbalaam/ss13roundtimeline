@@ -3,7 +3,9 @@
 		<div class="roundtitle">
 			<div class="titleload">
 				<div class="title"><img class="gamemode" src="../assets/star.svg"><b>Раунд #1</b><button
-						class="b-copy"><img class="copy" src="../assets/copy.svg"></button>
+						class="b-copy"><img class="copy" src="../assets/copy.svg"></button><button
+						class="b-copy"><img class="copy" src="../assets/download.svg"></button><button
+						class="b-copy"><img class="copy" src="../assets/reload.svg"></button>
 				</div>
 				<div class="progressbar" v-show="loading">
 					<div class="pgbdwn">
@@ -14,7 +16,6 @@
 
 
 			<p class="sub">IceBox Station, 2:15:23</p>
-			<!-- <p class="sub">15.09.24 @ 12:50:09 - 15.09.24 @ 16:50:09</p> -->
 		</div>
 		<div class="container-box">
 			<div class="timeline-start"></div>
@@ -57,7 +58,11 @@ export default {
 		}
 	},
 	mounted() {
-		axios.get(`http://localhost:8000/api/rounds/${round_id}`)
+		axios.get(`https://15f5-95-104-185-246.ngrok-free.app/api/rounds/${round_id}`, {
+			headers: {
+				'ngrok-skip-browser-warning': '69420'
+			}
+		})
 			.then(response => {
 				this.addFiles(response.data);
 			})
@@ -77,7 +82,11 @@ export default {
 			this.current = 0;
 			this.progress = 5;
 			this.loading = true;
-			axios.get('http://localhost:8000/api/rounds')
+			axios.get('https://15f5-95-104-185-246.ngrok-free.app/api/rounds', {
+				headers: {
+				'ngrok-skip-browser-warning': '69420'
+			}
+			})
 				.then(response => {
 					this.round_amount = response.data.length;
 					this.addFiles(response.data);
@@ -138,6 +147,8 @@ export default {
 	height: fit-content;
 	min-height: 78.8vh;
 	padding-left: 10%;
+	position: absolute;
+	margin-top: 20px;
 }
 
 .progress {
@@ -271,7 +282,7 @@ export default {
 .roundtitle {
 	font-family: fm;
 	color: rgb(233, 233, 233);
-	margin-top: 50px;
+	margin-top: 10px;
 	margin-left: 18px;
 	margin-bottom: -10px;
 	width: 80vw;
@@ -290,7 +301,7 @@ export default {
 	padding-bottom: 7px;
 	padding-left: 8px;
 	transition: 0.1s;
-	height: fit-content;
+	height: 29px;
 }
 
 .item:hover {
@@ -298,11 +309,12 @@ export default {
 }
 
 .b-copy {
-	height: 45px;
-	width: 45px;
-	margin-left: 20px;
+	height: 40px;
+	width: 40px;
+	margin-left: 10px;
+	margin-top: 3px;
 	border: none;
-	background-color: #1F1E23;
+	background-color: #32303b;
 	transition: 0.2s;
 	cursor: pointer;
 }

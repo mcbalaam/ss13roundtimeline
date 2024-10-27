@@ -20,8 +20,8 @@ async function getRoundsData() {
       const data = msgpack.unpack(buffer, { recursiveUnpack: true });
       const roundId = data.id;
       const mapName = dict.maps[data.map];
-      const startTime = unixTimeToDateTime(data.st);
-      const endTime = unixTimeToDateTime(data.end);
+      const startTime = unixTimeToDateTime(data.st, "full");
+      const endTime = unixTimeToDateTime(data.end, "full");
       const roundData = `${mapName}, ${startTime} - ${endTime}`;
       return { roundId, roundData };
     });
@@ -41,7 +41,7 @@ fs.readFile("../config/dictionary.yml", "utf8", (err, data) => {
   }
 });
 
-function unixTimeToDateTime(timestamp) {
+function unixTimeToDateTime(timestamp, type) {
   const date = new Date(timestamp * 1000);
   const day = date.getDate().toString().padStart(2, "0");
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -50,18 +50,11 @@ function unixTimeToDateTime(timestamp) {
   const minutes = date.getMinutes().toString().padStart(2, "0");
   const seconds = date.getSeconds().toString().padStart(2, "0");
 
-  return `${day}.${month}.${year} @ ${hours}:${minutes}:${seconds}`;
-}
-
-function unixTimeToTime(timestamp) {
-  const date = new Date(timestamp * 1000);
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const hours = date.getHours().toString().padStart(2, "0");
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-  const seconds = date.getSeconds().toString().padStart(2, "0");
-
-  return `${day}.${month} @ ${hours}:${minutes}:${seconds}`;
+  if (type == 'full'){
+	return `${day}.${month}.${year} @ ${hours}:${minutes}:${seconds}`;
+  } else {
+	return `${day}.${month} @ ${hours}:${minutes}:${seconds}`;
+  }
 }
 
 async function decodeByDictionary(data) {
@@ -88,7 +81,7 @@ async function decodeByDictionary(data) {
       ? replacePlaceholders(template.desc, data, eventData, round_id, map)
       : "";
     let event_type = eventType;
-    let event_time = unixTimeToTime(eventTime);
+    let event_time = unixTimeToTime(eventTime, "time");
 
     decoded_logs.push({ title, desc, event: event_type, time: event_time });
   }

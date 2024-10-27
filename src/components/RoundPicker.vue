@@ -11,7 +11,8 @@
 						<div class="progress" :style="{ width: progress + '%' }"></div>
 					</div>
 				</div>
-				<div class="list-item" v-for="(file, index) in files" :key="index" @click="navigateTo($event, file.roundId)">
+				<div class="list-item" v-for="(file, index) in files" :key="index"
+					@click="navigateTo($event, file.roundId)">
 					<p class="round-title">Round #{{ file.roundId }}</p>
 					<p class="round-desc">{{ file.roundData }}</p>
 					<div class="copy"><img src="../assets/copy.svg"></div>
@@ -37,9 +38,14 @@ export default {
 		}
 	},
 	mounted() {
-		axios.get('http://localhost:8000/api/rounds')
+		axios.get('https://15f5-95-104-185-246.ngrok-free.app/api/rounds', {
+			headers: {
+				'ngrok-skip-browser-warning': '69420'
+			}
+		})
 			.then(response => {
 				this.round_amount = response.data.length;
+				console.log(response.data);
 				this.addFiles(response.data);
 			})
 			.catch(error => {
@@ -67,9 +73,15 @@ export default {
 			this.current = 0;
 			this.progress = 5;
 			this.loading = true;
-			axios.get('http://localhost:8000/api/rounds')
+			axios.get('https://15f5-95-104-185-246.ngrok-free.app/api/rounds', {
+				headers: {
+					// 'Authorization': 'Bearer YOUR_TOKEN',
+					'ngrok-skip-browser-warning': '69420'
+				}
+			})
 				.then(response => {
 					this.round_amount = response.data.length;
+					console.log(this.round_amount)
 					this.addFiles(response.data);
 				})
 				.catch(error => {
@@ -99,19 +111,18 @@ export default {
 						this.loading = false;
 					}, 300);
 				}
-			}, 20);
+			}, 10);
 		}
 	}
 }
 </script>
 
 <style scoped>
-
 @media (max-width: 1200px) {
-  .container-box {
-    margin-left: 0px !important;
-	width: calc(100vw - 75px)  !important;
-  }
+	.container-box {
+		margin-left: 0px !important;
+		width: calc(100vw - 75px) !important;
+	}
 }
 
 :root {
@@ -125,12 +136,6 @@ export default {
 	/* Dark Blue-Gray */
 	--text-color: #1F1E23;
 	/* Dark Brown */
-}
-
-.wrapper {
-	width: 1000px;
-	height: fit-content;
-	min-height: 77.8vh;
 }
 
 .progress {
@@ -149,9 +154,15 @@ export default {
 	padding: 5px;
 }
 
+.wrapper {
+	margin-top: 0px;
+	position: relative;
+}
+
 .reload {
 	height: 20px;
 	margin-top: 1px;
+	padding-left: 5px;
 }
 
 .progressbar {
@@ -282,7 +293,7 @@ export default {
 }
 
 .end {
-	color: rgb(141, 155, 144);
+	color: rgb(165, 165, 165);
 	font-size: 17px;
 	margin-bottom: 0px;
 	background-color: #32303b;
@@ -298,7 +309,7 @@ export default {
 
 .end-line {
 	width: 100%;
-	border-bottom: 3px solid #4b5d6b;
+	border-bottom: 3px solid rgb(165, 165, 165);
 	margin-top: 15px;
 	position: relative;
 }
@@ -307,7 +318,7 @@ export default {
 	width: fit-content;
 	font-size: 15px;
 	line-height: 22px;
-	color: rgb(141, 155, 144);
+	color: rgb(165, 165, 165);
 	position: relative;
 	margin-top: -50px;
 	margin-right: 50px;
@@ -331,7 +342,7 @@ export default {
 .refresh-list {
 	background-color: #4b5d6b;
 	border: none;
-	color: rgb(141, 155, 144);
+	color: rgb(165, 165, 165);
 	font-family: fm;
 	font-size: 15px;
 	height: 30px;
@@ -357,7 +368,6 @@ export default {
 	color: rgb(233, 233, 233);
 	font-family: fm;
 	font-size: 20px;
-	margin-top: 10px;
 	margin-bottom: 100px;
 	background-color: #32303b;
 	width: 65vw;
@@ -367,6 +377,8 @@ export default {
 	padding-right: 20px;
 	padding-bottom: 15px;
 	overflow-y: auto;
+	position: absolute;
+	margin-top: 10px;
 }
 
 .divider {
