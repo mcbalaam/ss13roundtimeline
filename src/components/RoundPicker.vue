@@ -38,14 +38,14 @@ export default {
 		}
 	},
 	mounted() {
-		axios.get('https://15f5-95-104-185-246.ngrok-free.app/api/rounds', {
+		axios.get(`${process.env.VUE_APP_API_URL}/api/rounds`, {
 			headers: {
-				'ngrok-skip-browser-warning': '69420'
+				'ngrok-skip-browser-warning': '69420',
+				// 'auth': this.auth_key
 			}
 		})
 			.then(response => {
 				this.round_amount = response.data.length;
-				console.log(response.data);
 				this.addFiles(response.data);
 			})
 			.catch(error => {
@@ -73,15 +73,14 @@ export default {
 			this.current = 0;
 			this.progress = 5;
 			this.loading = true;
-			axios.get('https://15f5-95-104-185-246.ngrok-free.app/api/rounds', {
+			axios.get(`${process.env.VUE_APP_API_URL}/api/rounds`, {
 				headers: {
-					// 'Authorization': 'Bearer YOUR_TOKEN',
-					'ngrok-skip-browser-warning': '69420'
+					'ngrok-skip-browser-warning': '69420',
+					// 'auth': this.auth_key
 				}
 			})
 				.then(response => {
 					this.round_amount = response.data.length;
-					console.log(this.round_amount)
 					this.addFiles(response.data);
 				})
 				.catch(error => {

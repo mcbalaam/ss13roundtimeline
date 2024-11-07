@@ -3,9 +3,9 @@
 		<div class="roundtitle">
 			<div class="titleload">
 				<div class="title"><img class="gamemode" src="../assets/star.svg"><b>Раунд #1</b><button
-						class="b-copy"><img class="copy" src="../assets/copy.svg"></button><button
-						class="b-copy"><img class="copy" src="../assets/download.svg"></button><button
-						class="b-copy"><img class="copy" src="../assets/reload.svg"></button>
+						class="b-copy"><img class="copy" src="../assets/copy.svg"></button><button class="b-copy"><img
+							class="copy" src="../assets/download.svg"></button><button class="b-copy"><img class="copy"
+							src="../assets/reload.svg"></button>
 				</div>
 				<div class="progressbar" v-show="loading">
 					<div class="pgbdwn">
@@ -23,9 +23,8 @@
 			<div class="items-timeline">
 				<div v-for="(file, index) in files" :key="index" class="item" :class="file.event">
 					<div class="timestamp">{{ file.time }}</div>
-					<div class="pointer">
-						<div class="expander" v-if="file.desc != ''" @click="toggleAdditionalInfo(index)">{{
-						file.showAdditionalInfo ? '-' : '+' }}</div>
+					<div class="pointer" @click="toggleAdditionalInfo(index)">
+						<div class="expander" v-if="file.desc != ''">{{ file.showAdditionalInfo ? '-' : '+' }}</div>
 					</div>
 					<div class="sign">{{ file.title }}</div>
 					<div v-if="file.showAdditionalInfo" class="additional-info" v-show="file.showAdditionalInfo">
@@ -35,6 +34,40 @@
 			</div>
 			<div class="timeline-end">
 				<img class="arrow" src="../assets/arrow.png">
+			</div>
+		</div>
+		<div class="reality-tear">
+			<p class="scary">И ВДРУГ<br>ВСЁ ПОГРУЗИЛОСЬ ВО ТЬМУ.</p>
+		</div>
+		<div class="bottom-page">
+
+		</div>
+		<div class="report">
+			<div class="content-report">
+				<div class="tear"></div>
+				<h1>NT-CC-REP-0001</h1>
+				<div class="trim"></div>
+				<p>Смена номер #1 на IceBox Station завершена согласно стандартным процедурам.</p>
+				<p>Цели смены:</p>
+				<ul>
+					<li>установка противометеорной системы.</li>
+				</ul>
+				<h2>Угрозы</h2>
+				<div class="trim"></div>
+				<p>Всего очков потрачено - 50, а именно:</p>
+				<ul>
+					<li>Solo Operative (15 очков);</li>
+					<li>Space Kudzu (10 очков);</li>
+					<li>Mid-Round Traitor (10 очков);</li>
+					<li>Space Dragon (15 очков).</li>
+				</ul>
+				<p>Личные дела сотрудников прилагаются к документу.</p>
+				<p>С документом ознакомлен:</p>
+				<div class="field"><b class="sign_cap">Лирак Кнокен</b><i>(капитан),</i></div>
+				<div class="field"><b class="sign_cap">Катерина Роуз</b><i>(мл. офицер ЦентКом),</i></div>
+				<div class="date-str"><h2 class="date">07</h2><h2 class="date">ноября</h2><h2 class="num">35</h2><h2 class="date">24</h2></div>
+				<div class="bottom"></div>
+				<img class="stamp" src="../assets/stamp_nt.png">
 			</div>
 		</div>
 	</div>
@@ -58,13 +91,14 @@ export default {
 		}
 	},
 	mounted() {
-		axios.get(`https://15f5-95-104-185-246.ngrok-free.app/api/rounds/${round_id}`, {
+		axios.get(`${process.env.VUE_APP_API_URL}/api/rounds/${round_id}`, {
 			headers: {
 				'ngrok-skip-browser-warning': '69420'
 			}
 		})
 			.then(response => {
 				this.addFiles(response.data);
+				console.log(response.data)
 			})
 			.catch(error => {
 				console.error(error);
@@ -72,7 +106,9 @@ export default {
 	},
 	methods: {
 		toggleAdditionalInfo(index) {
-			this.files[index].showAdditionalInfo = !this.files[index].showAdditionalInfo;
+			if (!this.files[index].desc == '') {
+				this.files[index].showAdditionalInfo = !this.files[index].showAdditionalInfo;
+			}
 		},
 		refresh() {
 			if (this.loading) {
@@ -82,10 +118,10 @@ export default {
 			this.current = 0;
 			this.progress = 5;
 			this.loading = true;
-			axios.get('https://15f5-95-104-185-246.ngrok-free.app/api/rounds', {
+			axios.get(`${process.env.VUE_APP_API_URL}/api/rounds`, {
 				headers: {
-				'ngrok-skip-browser-warning': '69420'
-			}
+					'ngrok-skip-browser-warning': '69420'
+				}
 			})
 				.then(response => {
 					this.round_amount = response.data.length;
@@ -116,6 +152,7 @@ export default {
 					}, 300);
 				}
 			}, 10);
+
 		},
 		createItem(file) {
 			const item = {
@@ -123,7 +160,7 @@ export default {
 				desc: file.desc,
 				event: file.event,
 				time: file.time,
-				showAdditionalInfo: file.desc = false
+				showAdditionalInfo: false
 			};
 			this.files.push(item);
 		}
@@ -132,6 +169,142 @@ export default {
 </script>
 
 <style scoped>
+.scary {
+	font-family: rz;
+	color: aliceblue;
+	margin-top: 600px;
+	position: absolute;
+	font-size: 50px;
+	width: 100vw;
+	text-align: center;
+	line-height: 100px;
+}
+
+.bottom-page {
+	background-image: url("../assets/point-stars.png");
+	width: 100.5vw;
+	height: 700px;
+	background-position: center center;
+	background-size: cover;
+	margin-left: -11vw;
+}
+
+.reality-tear {
+	background-image: url("../assets/reality_tear.png");
+	width: 100.5vw;
+	height: 700px;
+	background-position: center center;
+	background-size: cover;
+	position: relative;
+	margin-top: -400px;
+	margin-left: -11vw;
+}
+
+
+.date-str {
+	display: flex;
+	position: absolute;
+	right: 80px;
+}
+
+.num {
+	margin-right: 0px;
+	margin-top: 20px;
+	line-height: 30px;
+	font-size: 20px;
+}
+
+.date {
+	color: rgb(167, 56, 56);
+	font-family: kb;
+	font-size: 30px;
+	line-height: 20px;
+	position: relative;
+	text-align: center;
+	width: fit-content;
+	min-width: 30px;
+	border-bottom: solid 2px #1F1E23;
+	margin-right: 10px;
+	margin-bottom: 40px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.sign_cap {
+	color: rgb(167, 56, 56);
+	font-family: kb;
+	font-size: 30px;
+	line-height: 20px;
+	position: relative;
+	text-align: center;
+	width: fit-content;
+	min-width: 300px;
+	border-bottom: solid 2px #1F1E23;
+	margin-right: 20px;
+	margin-bottom: 40px;
+}
+
+.field {
+	width: fit-content;
+	min-width: 300px;
+	display: flex;
+	flex-direction: row;
+}
+
+.stamp {
+	height: 80px;
+	margin-left: 20px;
+}
+
+.tear {
+	border-top: 15px dotted #1F1E23;
+	margin-top: -20px;
+	width: 62vw;
+	margin-left: -50px;
+}
+
+.content-report {
+	border-right: 15px dashed #1F1E23;
+	border-left: 15px dashed #1F1E23;
+	height: fit-content;
+	min-height: 100px;
+	font-family: fm;
+	padding-left: 25px;
+	padding-top: 10px;
+	line-height: 25px;
+	padding-right: 20px;
+	padding-bottom: 20px;
+}
+
+.trim {
+	border-top: 3px dotted #1F1E23;
+	margin-left: -10px;
+	margin-top: -5px;
+}
+
+.content-report p {
+	font-size: 18px;
+}
+
+.content-report li {
+	font-size: 18px;
+}
+
+.report {
+	width: 800px;
+	height: fit-content;
+	min-height: 100px;
+	background-color: rgb(224, 224, 192);
+	position: relative;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin-left: 5vw;
+	margin-top: 50px;
+}
+
+
+
+
 .titleload {
 	display: flex;
 	flex-direction: row;
@@ -147,7 +320,7 @@ export default {
 	height: fit-content;
 	min-height: 78.8vh;
 	padding-left: 10%;
-	position: absolute;
+	position: relative;
 	margin-top: 20px;
 }
 
@@ -240,8 +413,18 @@ export default {
 }
 
 @font-face {
+	font-family: rz;
+	src: url(../assets/RazlukaSP-Bold.otf);
+}
+
+@font-face {
 	font-family: fmr;
 	src: url(../assets/FeatureMono-Regular.ttf);
+}
+
+@font-face {
+	font-family: kb;
+	src: url(../assets/Kontrabanda.ttf);
 }
 
 .timeline-end {
@@ -267,8 +450,8 @@ export default {
 	font-family: fm;
 	color: rgb(233, 233, 233);
 
-	position: absolute;
-	width: 80%;
+	position: relative;
+	width: 100%;
 	height: fit-content;
 	padding-top: 5px;
 	padding-bottom: 5px;
@@ -282,7 +465,7 @@ export default {
 .roundtitle {
 	font-family: fm;
 	color: rgb(233, 233, 233);
-	margin-top: 10px;
+	margin-top: 50px;
 	margin-left: 18px;
 	margin-bottom: -10px;
 	width: 80vw;
@@ -301,7 +484,8 @@ export default {
 	padding-bottom: 7px;
 	padding-left: 8px;
 	transition: 0.1s;
-	height: 29px;
+	height: fit-content;
+	padding-right: 10px;
 }
 
 .item:hover {
